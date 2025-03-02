@@ -1,3 +1,5 @@
 <resources>
-    <string name="app_name">SihMid2</string>
+    <string name="hello_message">Hello, Mohammad Sihab!</string>
+    <string name="click_me">Click Me</string>
+    <string name="app_name">app_name\n</string>
 </resources>
