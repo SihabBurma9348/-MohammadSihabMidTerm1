@@ -15,7 +15,7 @@
     <string name="submit_rating">Submit Rating</string>
     <string name="no_data_passed">NO DATA PASSED</string>
 
-    <string-array name="sihab">
+    <string-array name="cities">
         <item>Ottawa</item>
         <item>Washington D.C.</item>
         <item>London</item>
@@ -27,7 +27,7 @@
         <item>Beijing</item>
         <item>Rome</item>
     </string-array>
-    <string-array name="burma">
+    <string-array name="countries">
         <item>Canada</item>
         <item>United States</item>
         <item>United Kingdom</item>

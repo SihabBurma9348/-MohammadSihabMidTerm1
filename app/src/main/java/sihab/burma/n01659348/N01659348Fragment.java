@@ -27,13 +27,13 @@ public class N01659348Fragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_n01659348, container, false);
 
         // Initialize Views
-        autoCompleteCity = view.findViewById(R.id.autoCompleteCity);
-        submitButton = view.findViewById(R.id.submitButton);
-        progressBar = view.findViewById(R.id.progressBar);
+        autoCompleteCity = view.findViewById(R.id.sihautoCompleteCity);
+        submitButton = view.findViewById(R.id.sihsubmitButton);
+        progressBar = view.findViewById(R.id.sihprogressBar);
 
         // Load Cities Array from strings.xml
-        capitalCities = getResources().getStringArray(R.array.sihab);  // First Name Array
-        countries = getResources().getStringArray(R.array.burma);  // Last Name Array
+        capitalCities = getResources().getStringArray(R.array.cities);
+        countries = getResources().getStringArray(R.array.countries);
 
         // Set Up AutoCompleteTextView
         ArrayAdapter<String> adapter = new ArrayAdapter<>(requireContext(), android.R.layout.simple_dropdown_item_1line, capitalCities);

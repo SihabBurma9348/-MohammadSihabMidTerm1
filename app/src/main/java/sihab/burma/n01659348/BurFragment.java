@@ -30,9 +30,9 @@ public class BurFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
         // Initialize Views
-        burTextView = view.findViewById(R.id.burTextView);
-        burRatingBar = view.findViewById(R.id.burRatingBar);
-        burSubmitButton = view.findViewById(R.id.burSubmitButton);
+        burTextView = view.findViewById(R.id.sihburTextView);
+        burRatingBar = view.findViewById(R.id.sihburRatingBar);
+        burSubmitButton = view.findViewById(R.id.sihburSubmitButton);
 
         // Retrieve Data Passed from N11111Fragment (Third Fragment)
         Bundle args = getArguments();
