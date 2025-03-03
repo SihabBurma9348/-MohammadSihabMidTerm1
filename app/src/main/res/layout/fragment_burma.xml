@@ -9,7 +9,7 @@
 
     <!-- TextView for Passed Data -->
     <TextView
-        android:id="@+id/burTextView"
+        android:id="@+id/sihburTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:gravity="center"
@@ -22,7 +22,7 @@
 
     <!-- Rating Bar -->
     <RatingBar
-        android:id="@+id/burRatingBar"
+        android:id="@+id/sihburRatingBar"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:numStars="5"
@@ -32,7 +32,7 @@
 
     <!-- Submit Button -->
     <Button
-        android:id="@+id/burSubmitButton"
+        android:id="@+id/sihburSubmitButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/submit_rating"

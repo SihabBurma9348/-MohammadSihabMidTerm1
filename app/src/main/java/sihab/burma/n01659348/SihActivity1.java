@@ -62,6 +62,7 @@ public class SihActivity1 extends AppCompatActivity {
                     getString(R.string.n01659348_s_tab)
             };
             tab.setText(tabTitles[position]);
+            tab.view.setContentDescription(tabTitles[position]);
         }).attach();
 
         // Initialize Fused Location Provider
