@@ -1,3 +1,5 @@
+<!-- Name :- Mohammad Sihab Burma -->
+<!-- N no. :- n01659348 -->
 <resources>
 
     <style name="TabTextStyle">
@@ -6,9 +8,9 @@
         <item name="android:textStyle">bold</item>
     </style>
 
-    <string name="sihab_s_tab">Sihab\'s Tab</string>
-    <string name="burma_s_tab">Burma\'s Tab</string>
-    <string name="n01659348_s_tab">N01659348\'s Tab</string>
+    <string name="sihab_s_tab">Sihab</string>
+    <string name="burma_s_tab">Burma</string>
+    <string name="n01659348_s_tab">N01659348</string>
     <string name="app_name">Mohammad Sihab Burma\n</string>
     <string name="full_name">Mohammad Sihab Burma\n</string>
     <string name="loading_time">loading_time\n</string>
