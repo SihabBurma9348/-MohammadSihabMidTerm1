@@ -5,6 +5,19 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
+    <!-- Toolbar (ActionBar) -->
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/sihToolbar"
+        android:layout_width="0dp"
+        android:layout_height="?attr/actionBarSize"
+        android:background="?attr/colorPrimary"
+        android:theme="@style/ThemeOverlay.AppCompat.ActionBar"
+        app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="30dp"/>
+
     <!-- TabLayout -->
     <com.google.android.material.tabs.TabLayout
         android:id="@+id/sihTabLayout"
@@ -16,8 +29,8 @@
         app:tabIndicatorColor="@android:color/holo_red_light"
         app:tabSelectedTextColor="@android:color/black"
         app:tabTextColor="@android:color/darker_gray"
-        android:layout_marginTop="30dp"
-        app:layout_constraintTop_toTopOf="parent"
+        android:layout_marginTop="4dp"
+        app:layout_constraintTop_toBottomOf="@id/sihToolbar"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"/>
 

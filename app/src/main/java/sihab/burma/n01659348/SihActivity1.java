@@ -17,14 +17,18 @@ import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import androidx.viewpager2.widget.ViewPager2;
 
+import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.tabs.TabLayout;
 import com.google.android.material.tabs.TabLayoutMediator;
-import com.google.android.gms.location.FusedLocationProviderClient;
-import com.google.android.gms.location.LocationServices;
 
 public class SihActivity1 extends AppCompatActivity {
 
@@ -38,6 +42,10 @@ public class SihActivity1 extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        // Initialize Toolbar
+        Toolbar toolbar = findViewById(R.id.sihToolbar);
+        setSupportActionBar(toolbar);
+
         // Initialize Views
         viewPager = findViewById(R.id.sihViewPager);
         tabLayout = findViewById(R.id.sihTabLayout);
@@ -46,7 +54,7 @@ public class SihActivity1 extends AppCompatActivity {
         ViewPagerAdapter viewPagerAdapter = new ViewPagerAdapter(this);
         viewPager.setAdapter(viewPagerAdapter);
 
-        // Tab Titles
+        // Attach TabLayout to ViewPager2
         new TabLayoutMediator(tabLayout, viewPager, (tab, position) -> {
             String[] tabTitles = {
                     getString(R.string.sihab_s_tab),
@@ -72,7 +80,7 @@ public class SihActivity1 extends AppCompatActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.toolbar_menu, menu);
+        inflater.inflate(R.menu.toolbar_menu, menu);  // Ensure toolbar_menu.xml exists
         return true;
     }
 
@@ -89,22 +97,18 @@ public class SihActivity1 extends AppCompatActivity {
     // Show Exit Dialog
     private void showExitDialog() {
         new AlertDialog.Builder(this)
-                .setTitle("Mohammad Sihab Burma")
-                .setMessage("Do you want to leave the app?")
-                .setIcon(R.drawable.xyz)  // Ensure this icon exists in res/drawable
+                .setTitle("Exit App")
+                .setMessage("Do you want to close the app?")
+                .setIcon(R.drawable.abc)  // Ensure this icon exists in res/drawable
                 .setCancelable(false)
-                .setPositiveButton("Yes", (dialog, which) -> {
-                    Intent intent = new Intent(Settings.ACTION_SETTINGS);
-                    startActivity(intent);
-                    finish();
-                })
-                .setNegativeButton("No", (dialog, which) -> viewPager.setCurrentItem(2, true))
+                .setPositiveButton("Yes", (dialog, which) -> finishAffinity()) // Closes the app completely
+                .setNegativeButton("No", (dialog, which) -> dialog.dismiss())
                 .show();
     }
 
     // Check Location Permission
     private void checkLocationPermission() {
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
                 != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(this,
                     new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
@@ -122,8 +126,15 @@ public class SihActivity1 extends AppCompatActivity {
             if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 fetchLocation();
             } else {
-                Snackbar.make(findViewById(android.R.id.content), "Mohammad Sihab Burma - Access Denied", Snackbar.LENGTH_INDEFINITE)
-                        .setAction("Dismiss", view -> {})
+                Snackbar.make(findViewById(android.R.id.content),
+                                "Location Permission Denied",
+                                Snackbar.LENGTH_LONG)
+                        .setAction("Settings", view -> {
+                            Intent intent = new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
+                            Uri uri = Uri.fromParts("package", getPackageName(), null);
+                            intent.setData(uri);
+                            startActivity(intent);
+                        })
                         .show();
             }
         }
@@ -131,22 +142,28 @@ public class SihActivity1 extends AppCompatActivity {
 
     // Fetch Device Location and Open Google Maps
     private void fetchLocation() {
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
-            fusedLocationClient.getLastLocation().addOnSuccessListener(this, location -> {
-                if (location != null) {
-                    double latitude = location.getLatitude();
-                    double longitude = location.getLongitude();
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+            fusedLocationClient.getLastLocation()
+                    .addOnSuccessListener(location -> {
+                        if (location != null) {
+                            double latitude = location.getLatitude();
+                            double longitude = location.getLongitude();
 
-                    // Show Toast
-                    Toast.makeText(this, "Latitude: " + latitude + ", Longitude: " + longitude, Toast.LENGTH_LONG).show();
+                            // Show Toast
+                            Toast.makeText(SihActivity1.this,
+                                    "Latitude: " + latitude + ", Longitude: " + longitude,
+                                    Toast.LENGTH_LONG).show();
 
-                    // Open Google Maps with Current Location
-                    Uri gmmIntentUri = Uri.parse("geo:" + latitude + "," + longitude);
-                    Intent mapIntent = new Intent(Intent.ACTION_VIEW, gmmIntentUri);
-                    mapIntent.setPackage("com.google.android.apps.maps");
-                    startActivity(mapIntent);
-                }
-            });
+                            // Open Google Maps with Current Location
+                            Uri gmmIntentUri = Uri.parse("geo:" + latitude + "," + longitude);
+                            Intent mapIntent = new Intent(Intent.ACTION_VIEW, gmmIntentUri);
+                            mapIntent.setPackage("com.google.android.apps.maps");
+                            startActivity(mapIntent);
+                        } else {
+                            Toast.makeText(SihActivity1.this, "Location not available", Toast.LENGTH_SHORT).show();
+                        }
+                    })
+                    .addOnFailureListener(e -> Toast.makeText(SihActivity1.this, "Failed to get location", Toast.LENGTH_SHORT).show());
         }
     }
 }
