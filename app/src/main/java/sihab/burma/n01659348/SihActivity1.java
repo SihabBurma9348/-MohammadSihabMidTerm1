@@ -1,33 +1,37 @@
 package sihab.burma.n01659348;
 
 import android.os.Bundle;
-import android.view.View;
-import android.widget.Button;
-import android.widget.Toast;
-
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.graphics.Insets;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowInsetsCompat;
+import androidx.viewpager2.widget.ViewPager2;
+import com.google.android.material.tabs.TabLayout;
+import com.google.android.material.tabs.TabLayoutMediator;
 
 public class SihActivity1 extends AppCompatActivity {
+
+    private ViewPager2 viewPager;
+    private TabLayout tabLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        // Handle Window Insets (For Status Bar Adjustments)
-        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
-            Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
-            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
-            return insets;
-        });
+        // Initialize Views
+        viewPager = findViewById(R.id.sihViewPager);
+        tabLayout = findViewById(R.id.sihTabLayout);
 
-        // Initialize Button
-        Button sihButton = findViewById(R.id.sihButton);
-        sihButton.setOnClickListener(v ->
-                Toast.makeText(SihActivity1.this, "Button Clicked!", Toast.LENGTH_SHORT).show()
-        );
+        // Set up ViewPagerAdapter
+        ViewPagerAdapter viewPagerAdapter = new ViewPagerAdapter(this);
+        viewPager.setAdapter(viewPagerAdapter);
+
+        // Connect TabLayout with ViewPager2
+        new TabLayoutMediator(tabLayout, viewPager, (tab, position) -> {
+            String[] tabTitles = {
+                    getString(R.string.sihab_s_tab),      // First Tab
+                    getString(R.string.burma_s_tab),      // Second Tab
+                    getString(R.string.n01659348_s_tab)   // Third Tab
+            };
+            tab.setText(tabTitles[position]); // Set Tab Titles
+        }).attach();
     }
 }
