@@ -9,7 +9,6 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.provider.Settings;
 import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.widget.Toast;
 
@@ -23,6 +22,9 @@ import androidx.core.content.ContextCompat;
 import androidx.viewpager2.widget.ViewPager2;
 
 import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationCallback;
+import com.google.android.gms.location.LocationRequest;
+import com.google.android.gms.location.LocationResult;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -80,8 +82,7 @@ public class SihActivity1 extends AppCompatActivity {
     // Inflate Menu (Toolbar)
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.toolbar_menu, menu);  // Ensure toolbar_menu.xml exists
+        getMenuInflater().inflate(R.menu.toolbar_menu, menu);
         return true;
     }
 
@@ -107,12 +108,15 @@ public class SihActivity1 extends AppCompatActivity {
                 .show();
     }
 
-    // Check Location Permission
+    // Check Location Permission Before Fetching Location
     private void checkLocationPermission() {
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
-                != PackageManager.PERMISSION_GRANTED) {
+                != PackageManager.PERMISSION_GRANTED ||
+                ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION)
+                        != PackageManager.PERMISSION_GRANTED) {
+
             ActivityCompat.requestPermissions(this,
-                    new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
+                    new String[]{Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION},
                     LOCATION_PERMISSION_REQUEST_CODE);
         } else {
             fetchLocation();
@@ -141,30 +145,75 @@ public class SihActivity1 extends AppCompatActivity {
         }
     }
 
-    // Fetch Device Location and Open Google Maps
+    // Fetch Device Location and Handle SecurityException
     private void fetchLocation() {
-        if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
-            fusedLocationClient.getLastLocation()
-                    .addOnSuccessListener(location -> {
-                        if (location != null) {
-                            double latitude = location.getLatitude();
-                            double longitude = location.getLongitude();
+        try {
+            if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
 
-                            // Show Toast
-                            Toast.makeText(SihActivity1.this,
-                                    "Latitude: " + latitude + ", Longitude: " + longitude,
-                                    Toast.LENGTH_LONG).show();
-
-                            // Open Google Maps with Current Location
-                            Uri gmmIntentUri = Uri.parse("geo:" + latitude + "," + longitude);
-                            Intent mapIntent = new Intent(Intent.ACTION_VIEW, gmmIntentUri);
-                            mapIntent.setPackage("com.google.android.apps.maps");
-                            startActivity(mapIntent);
-                        } else {
-                            Toast.makeText(SihActivity1.this, "Location not available", Toast.LENGTH_SHORT).show();
-                        }
-                    })
-                    .addOnFailureListener(e -> Toast.makeText(SihActivity1.this, "Failed to get location", Toast.LENGTH_SHORT).show());
+                fusedLocationClient.getLastLocation()
+                        .addOnSuccessListener(new OnSuccessListener<Location>() {
+                            @Override
+                            public void onSuccess(Location location) {
+                                if (location != null) {
+                                    openGoogleMaps(location);
+                                } else {
+                                    requestNewLocation();
+                                }
+                            }
+                        })
+                        .addOnFailureListener(new OnFailureListener() {
+                            @Override
+                            public void onFailure(@NonNull Exception e) {
+                                Toast.makeText(SihActivity1.this, "Failed to get location", Toast.LENGTH_SHORT).show();
+                            }
+                        });
+            } else {
+                Toast.makeText(this, "Location Permission Not Granted", Toast.LENGTH_SHORT).show();
+            }
+        } catch (SecurityException e) {
+            e.printStackTrace();
+            Toast.makeText(this, "Location access denied: " + e.getMessage(), Toast.LENGTH_LONG).show();
         }
+    }
+
+    // Request New Location if Last Known Location is Null
+    private void requestNewLocation() {
+        try {
+            LocationRequest locationRequest = new LocationRequest.Builder(10000) // 10 seconds
+                    .setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY)
+                    .build();
+
+            fusedLocationClient.requestLocationUpdates(locationRequest, new LocationCallback() {
+                @Override
+                public void onLocationResult(LocationResult locationResult) {
+                    fusedLocationClient.removeLocationUpdates(this);
+                    if (locationResult != null && locationResult.getLastLocation() != null) {
+                        openGoogleMaps(locationResult.getLastLocation());
+                    } else {
+                        Toast.makeText(SihActivity1.this, "Unable to get current location", Toast.LENGTH_SHORT).show();
+                    }
+                }
+            }, getMainLooper());
+        } catch (SecurityException e) {
+            e.printStackTrace();
+            Toast.makeText(this, "Permission error: " + e.getMessage(), Toast.LENGTH_LONG).show();
+        }
+    }
+
+    // Open Google Maps with Current Location
+    private void openGoogleMaps(Location location) {
+        double latitude = location.getLatitude();
+        double longitude = location.getLongitude();
+
+        // Show Toast
+        Toast.makeText(SihActivity1.this,
+                "Latitude: " + latitude + ", Longitude: " + longitude,
+                Toast.LENGTH_LONG).show();
+
+        // Open Google Maps
+        Uri gmmIntentUri = Uri.parse("geo:" + latitude + "," + longitude);
+        Intent mapIntent = new Intent(Intent.ACTION_VIEW, gmmIntentUri);
+        mapIntent.setPackage("com.google.android.apps.maps");
+        startActivity(mapIntent);
     }
 }
