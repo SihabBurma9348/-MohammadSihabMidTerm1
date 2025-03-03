@@ -2,15 +2,41 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/light_blue"
+    android:orientation="vertical"
     android:gravity="center"
-    android:background="@color/light_yellow"
-    android:orientation="vertical">
+    android:padding="20dp">
 
+    <!-- TextView for Passed Data -->
     <TextView
+        android:id="@+id/burTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/burma_s_tab"
-        android:textSize="24sp"
-        android:textColor="@android:color/black"
-        android:textStyle="bold"/>
+        android:gravity="center"
+        android:padding="10dp"
+        android:text="@string/no_data_passed"
+        android:textColor="@color/black"
+        android:textSize="1800dp"
+        android:textStyle="italic" />
+
+
+    <!-- Rating Bar -->
+    <RatingBar
+        android:id="@+id/burRatingBar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:numStars="5"
+        android:stepSize="0.5"
+        android:rating="2.5"
+        android:layout_marginTop="20dp"/>
+
+    <!-- Submit Button -->
+    <Button
+        android:id="@+id/burSubmitButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/submit_rating"
+        android:background="@color/blue"
+        android:textColor="@android:color/white"
+        android:layout_marginTop="20dp"/>
 </LinearLayout>

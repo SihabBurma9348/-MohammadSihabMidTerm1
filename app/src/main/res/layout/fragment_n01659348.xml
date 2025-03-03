@@ -2,15 +2,40 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:gravity="center"
-    android:background="@color/light_yellow"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:padding="20dp"
+    android:background="@color/light_pink"
+    android:gravity="center">
 
-    <TextView
+
+    <ProgressBar
+        android:id="@+id/progressBar"
+        style="?android:attr/progressBarStyleLarge"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/n01659348_s_tab"
-        android:textSize="24sp"
-        android:textColor="@android:color/black"
-        android:textStyle="bold"/>
+        android:indeterminate="true"
+        android:layout_marginBottom="20dp"/>
+
+
+    <AutoCompleteTextView
+        android:id="@+id/autoCompleteCity"
+        android:layout_width="500dp"
+        android:layout_height="500dp"
+        android:hint="Enter Capital City"
+        android:completionThreshold="3"
+        android:textSize="18sp"
+        android:inputType="textCapWords"
+        android:background="@drawable/mno"
+        android:textColor="@color/white"
+        android:textColorHint="@color/light_gray"
+        android:padding="10dp"/>
+
+    <Button
+        android:id="@+id/submitButton"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Submit"
+        android:background="@color/blue"
+        android:textColor="@color/white"
+        android:layout_marginTop="20dp"/>
 </LinearLayout>

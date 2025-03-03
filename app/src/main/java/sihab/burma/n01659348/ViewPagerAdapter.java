@@ -18,13 +18,13 @@ public class ViewPagerAdapter extends FragmentStateAdapter {
     public Fragment createFragment(int position) {
         switch (position) {
             case 0:
-                return new SihabFragment();  // First tab fragment
+                return new SihFragment();  // First tab fragment
             case 1:
-                return new BurmaFragment();  // Second tab fragment
+                return new BurFragment();  // Second tab fragment
             case 2:
                 return new N01659348Fragment();  // Third tab fragment
             default:
-                return new SihabFragment(); // Fallback to default fragment
+                return new SihFragment(); // Fallback to default fragment
         }
     }
 
